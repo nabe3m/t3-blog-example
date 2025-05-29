@@ -60,9 +60,6 @@ export default function Home() {
 							<h1 className="text-3xl font-bold text-gray-900 mb-2">
 								最新の記事
 							</h1>
-							<p className="text-gray-600">
-								ブログシステムの最新記事をご覧ください
-							</p>
 						</div>
 						<BlogPostList />
 					</div>
