@@ -1,0 +1,11 @@
+{
+  "buildCommand": "pnpm build",
+  "outputDirectory": ".next",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "functions": {
+    "src/app/api/trpc/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "regions": ["nrt1"]
+} 

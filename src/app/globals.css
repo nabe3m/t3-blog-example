@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* コードハイライト用の基本スタイル */
+.hljs {
+  font-size: 0.875rem !important;
+  line-height: 1.5 !important;
+  font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace !important;
+}
+
+.hljs code {
+  font-size: 0.875rem !important;
+}
+
+/* コードハイライト用のカラーテーマ（GitHub Dark風） */
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1rem;
+  background: #0d1117;
+  color: #c9d1d9;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #8b949e;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-type {
+  color: #ff7b72;
+}
+
+.hljs-string,
+.hljs-subst {
+  color: #a5d6ff;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag .hljs-attr {
+  color: #79c0ff;
+}
+
+.hljs-title,
+.hljs-name,
+.hljs-attribute {
+  color: #ffa657;
+}
+
+.hljs-title.class_,
+.hljs-title.function_ {
+  color: #d2a8ff;
+}
+
+.hljs-built_in {
+  color: #ffa657;
+}
+
+.hljs-meta {
+  color: #79c0ff;
+}
+
+.hljs-meta .hljs-string {
+  color: #a5d6ff;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+/* プロダクション環境でのコンソールスタイル */
+@media (prefers-color-scheme: dark) {
+  .hljs {
+    background: #1f2937 !important;
+    color: #f9fafb !important;
+  }
+} 
