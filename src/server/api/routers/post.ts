@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { randomUUID } from "crypto";
+import { revalidatePath } from "next/cache";
 
 import {
 	createTRPCRouter,
@@ -298,6 +299,19 @@ export const postRouter = createTRPCRouter({
 				},
 			});
 
+			// ISRキャッシュを無効化（公開された記事の場合）
+			if (input.published) {
+				revalidatePath("/"); // ホームページ
+				revalidatePath("/categories"); // カテゴリ一覧
+				
+				// カテゴリページも無効化
+				if (post.categories && post.categories.length > 0) {
+					post.categories.forEach(postCategory => {
+						revalidatePath(`/categories/${postCategory.category.slug}`);
+					});
+				}
+			}
+
 			return post;
 		}),
 
@@ -380,6 +394,18 @@ export const postRouter = createTRPCRouter({
 				},
 			});
 
+			// ISRキャッシュを無効化
+			revalidatePath("/"); // ホームページ
+			revalidatePath(`/posts/${currentPost.slug}`); // 記事ページ
+			revalidatePath("/categories"); // カテゴリ一覧
+			
+			// カテゴリページも無効化
+			if (post.categories && post.categories.length > 0) {
+				post.categories.forEach(postCategory => {
+					revalidatePath(`/categories/${postCategory.category.slug}`);
+				});
+			}
+
 			return post;
 		}),
 
@@ -390,6 +416,13 @@ export const postRouter = createTRPCRouter({
 			// 記事の存在と所有権チェック
 			const currentPost = await ctx.db.post.findUnique({
 				where: { id: input.id },
+				include: {
+					categories: {
+						include: {
+							category: true
+						}
+					}
+				}
 			});
 
 			if (!currentPost) {
@@ -406,8 +439,22 @@ export const postRouter = createTRPCRouter({
 				});
 			}
 
-			return ctx.db.post.delete({
+			const result = await ctx.db.post.delete({
 				where: { id: input.id },
 			});
+
+			// ISRキャッシュを無効化
+			revalidatePath("/"); // ホームページ
+			revalidatePath(`/posts/${currentPost.slug}`); // 記事ページ
+			revalidatePath("/categories"); // カテゴリ一覧
+			
+			// カテゴリページも無効化
+			if (currentPost.categories && currentPost.categories.length > 0) {
+				currentPost.categories.forEach(postCategory => {
+					revalidatePath(`/categories/${postCategory.category.slug}`);
+				});
+			}
+
+			return result;
 		}),
 });

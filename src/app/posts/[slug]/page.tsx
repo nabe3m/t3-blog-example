@@ -12,6 +12,21 @@ interface PostPageProps {
 	params: Promise<{ slug: string }>;
 }
 
+// ISR設定：1時間ごとに再生成
+export const revalidate = 3600;
+
+// 静的生成するパラメータを事前生成
+export async function generateStaticParams() {
+	try {
+		const posts = await api.post.getPublished({ limit: 100 });
+		return posts.posts.map((post) => ({
+			slug: post.slug,
+		}));
+	} catch (error) {
+		return [];
+	}
+}
+
 // メタデータ生成
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
 	try {
